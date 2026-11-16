@@ -1,0 +1,163 @@
+OPERACIÓN HALCÓN - Videojuego FPS en Unity
+Christopher Payero Estrella - Matrícula 1-21-0909
+=====================================================================
+
+1. IDEA DEL JUEGO
+-----------------
+Shooter en primera persona de estilo militar. El jugador es el Sargento
+Halcón, del Escuadrón Halcón, y debe detener a la Legión Ferro, un ejército
+de robots. La partida tiene tres niveles:
+
+  Nivel 1 - "01 Galeria de disparos": campo de entrenamiento con 12
+            objetivos y 20 balas. Cada objetivo da puntos distintos.
+  Nivel 2 - "02 Base enemiga": base militar tomada por robots. Hay que
+            eliminar 3 oleadas de enemigos (centinelas y drones).
+  Nivel 3 - "03 Guarida del Coloso": combate contra el jefe final.
+
+Además están la escena "00 Menu" (menú de entrada) y "04 Fin" (pantalla
+final de victoria o derrota con el botón Volver a jugar).
+
+
+2. CÓMO SE CUMPLE CADA PUNTO DE LA ACTIVIDAD
+--------------------------------------------
+- Escena llamada "01 Galeria de disparos": es el primer nivel
+  (Assets/Scenes/01 Galeria de disparos.unity).
+
+- Jugador que se mueve con las flechas y apunta con el ratón:
+  Jugador.cs usa un CharacterController. Las flechas (también WASD) mueven
+  al soldado, el ratón gira la cámara (horizontal) y la inclina (vertical,
+  limitado a 85 grados). Espacio salta y Shift corre.
+
+- Clic izquierdo dispara el arma: Arma.cs crea un proyectil (Proyectil.cs),
+  una bala trazadora con estela que sale de la boca del fusil hacia el
+  centro de la mira. Cada disparo gasta una bala. Sin balas solo suena el
+  gatillo.
+
+- Puntuación según lo que se alcanza: cada objetivo tiene el componente
+  Objetivo.cs con su tipo y sus puntos, y el juego distingue qué parte se
+  tocó:
+      Diana: borde 10, anillo 25, centro 50 (cada anillo es un colisionador
+             con ZonaPuntos.cs, así se sabe en qué anillo pegó la bala)
+      Diana móvil: 20 / 50 / 100
+      Botella 15, Globo 30, Placa lejana de precisión 100
+      Civil (silueta azul): RESTA 50 puntos
+      Antena enemiga 150 (aguanta 3 impactos)
+      Dron 60, Centinela 100, Coloso 2.000
+  En los enemigos también importa la parte: la cabeza del centinela y el
+  ojo del dron reciben daño doble, y el núcleo del Coloso daño triple
+  (ParteEnemigo.cs).
+
+- Al alcanzar una diana se destruyen el proyectil y el objeto: el
+  proyectil se destruye en cuanto toca algo, y Objetivo.cs destruye el
+  objeto alcanzado con una explosión de pedazos y su sonido.
+
+- Munición, vidas y enemigos: se empieza con 3 vidas (máximo 5) y con 20
+  balas. La munición que sobra pasa al siguiente nivel y cada nivel da
+  balas extra (35 en el nivel 2, 40 en el 3). Hay cajas de munición y
+  botiquines. Si un enemigo toca al jugador, este pierde una vida.
+
+- El juego termina cuando se acaba la munición o la vida:
+  Nivel.cs revisa varias veces por segundo. Si no quedan balas, no hay
+  proyectiles en el aire ni cajas de munición, la partida termina con
+  "MISIÓN FALLIDA". Lo mismo pasa al llegar a 0 vidas. La pantalla final
+  muestra la puntuación, las vidas restantes, la munición restante, el
+  nivel alcanzado, las dianas y enemigos destruidos, la precisión y el
+  tiempo. El resultado también se escribe en la consola.
+
+- Al menos tres niveles, uno con enemigos y otro con el jefe: nivel 2 con
+  3 oleadas de enemigos (21 robots) y nivel 3 con el jefe Coloso.
+
+- Menú de entrada y menú final para volver a jugar: "00 Menu" (Jugar,
+  Cómo jugar, Personajes, Salir) y "04 Fin" (Volver a jugar, Menú
+  principal). También hay un menú de pausa con Esc o P.
+
+- Imágenes de personajes y enemigos para aprobación:
+  Documentacion/Hoja_de_personajes.png y los retratos individuales en
+  Documentacion/personajes.
+
+
+3. CÓMO SE HIZO Y POR QUÉ
+-------------------------
+- Todo el contenido del juego se genera con un script de editor
+  (Assets/Editor/ConstructorProyecto.cs y sus partes Materiales, Sprites,
+  Audio, Modelos, Niveles e Interfaz). Desde el menú "Halcon > Construir
+  todo" se crean las texturas, los materiales, los sonidos, la música, los
+  modelos, los prefabs y las 5 escenas. Lo hice así para poder cambiar un
+  número (por ejemplo, los puntos de una diana o la posición de un
+  enemigo) y regenerar todo sin tocar las escenas a mano, y para no
+  depender de paquetes de la Asset Store.
+
+- Los modelos (soldado, fusil, centinela, dron, Coloso, dianas, botellas,
+  globos, cajas, torres, búnkeres, pilares...) están hechos con piezas
+  básicas de Unity (cubos, cilindros, esferas y cápsulas). Las texturas
+  (pasto, tierra, concreto, madera, metal, camuflaje) se dibujan por
+  código con ruido Perlin. Así todo el arte es original.
+
+- Los sonidos y la música también son originales: se sintetizan por
+  código (disparo, gatillo vacío, rebote, madera, vidrio, globo, metal,
+  explosión, rugido del jefe, recarga, etc.) y hay cinco piezas de
+  música: menú, combate, jefe, victoria y derrota.
+
+- El proyectil no usa el motor de física para chocar: cada fotograma hace
+  un barrido esférico (SphereCast) entre su posición anterior y la nueva.
+  Lo elegí porque una bala rápida con Rigidbody puede atravesar objetos
+  delgados como una diana; con el barrido nunca los salta.
+
+- La bala sale de la boca del arma pero apunta al punto que está en el
+  centro de la mira (se calcula con un rayo desde la cámara), para que el
+  jugador le pegue a lo que ve en la mira.
+
+- El fusil se dibuja con una segunda cámara que solo ve la capa "Arma".
+  Así el arma nunca atraviesa las paredes cuando el jugador se pega a
+  ellas.
+
+- Los enemigos persiguen al jugador y esquivan obstáculos probando
+  direcciones a los lados con SphereCast. El dron vuela alto y se lanza en
+  picada cuando está cerca.
+
+- El Coloso tiene una pequeña máquina de estados: camina, se prepara
+  (brilla en rojo y ruge), embiste en línea recta y, si choca con un
+  pilar, queda aturdido 3 segundos y recibe el doble de daño. Al 66 % y al
+  33 % de vida llama a 3 drones. Esto obliga al jugador a moverse y a usar
+  los pilares en vez de quedarse quieto disparando.
+
+- En la galería hay siluetas de civiles que restan puntos para que el
+  jugador tenga que mirar antes de disparar, no solo disparar a todo.
+
+- Juego.cs se conserva entre escenas (DontDestroyOnLoad) y guarda los
+  puntos, las vidas, la munición y las estadísticas. El mejor puntaje se
+  guarda con PlayerPrefs.
+
+
+4. CONTROLES
+------------
+  Flechas (o WASD)   moverse
+  Ratón              apuntar
+  Clic izquierdo     disparar
+  Espacio            saltar
+  Shift              correr
+  Esc o P            pausa
+
+
+5. PRUEBAS
+----------
+Assets/Editor/PruebaAutomatica.cs juega la partida completa en modo Play:
+dispara a los anillos de las dianas, a un civil, a la botella, al globo y
+a la placa, comprueba los puntos y las balas, pasa al nivel 2, prueba el
+daño a la cabeza, el choque con un enemigo, las cajas de munición, el
+botiquín, la pausa y las tres oleadas, derrota al Coloso, revisa la
+pantalla de victoria y luego las dos derrotas (sin munición y sin vidas).
+Resultado: 48 comprobaciones correctas. También toma las capturas de
+Documentacion/capturas.
+
+
+6. ESTRUCTURA
+-------------
+  Assets/Scenes      00 Menu, 01 Galeria de disparos, 02 Base enemiga,
+                     03 Guarida del Coloso, 04 Fin
+  Assets/Scripts     código del juego (Jugador, Arma, Proyectil, Objetivo,
+                     Enemigo, Jefe, Nivel, HUD, Menu, Fin, Juego...)
+  Assets/Editor      constructor del proyecto, retratos y prueba automática
+  Documentacion      hoja de personajes, retratos y capturas
+
+Hecho con Unity 6 (6000.6.4f1). Se puede jugar en el navegador (WebGL).

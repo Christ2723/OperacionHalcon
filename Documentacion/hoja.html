@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Operación Halcón · Personajes</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1600px; height: 900px; background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', Arial, sans-serif; padding: 40px 48px; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #f5b82e; padding-bottom: 16px; margin-bottom: 28px; }
+  h1 { font-size: 46px; letter-spacing: 1px; }
+  h1 span { color: #f5b82e; }
+  header p { color: #9fb3c8; font-size: 18px; text-align: right; line-height: 1.4; }
+  .fila { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .ficha { background: #161b22; border: 1px solid #2b3440; border-radius: 12px; overflow: hidden; }
+  .ficha img { width: 100%; height: 470px; object-fit: cover; display: block; }
+  .ficha div { padding: 16px 18px 20px; }
+  .rol { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; color: #f5b82e; text-transform: uppercase; }
+  .rol.malo { color: #ff6b5b; }
+  h2 { font-size: 26px; margin: 4px 0 8px; }
+  .ficha p { color: #b8c4d0; font-size: 16px; line-height: 1.45; }
+  .datos { margin-top: 10px; font-size: 15px; color: #e6edf3; }
+  .datos b { color: #f5b82e; }
+</style>
+</head>
+<body>
+<header>
+  <h1>OPERACIÓN <span>HALCÓN</span> · Personajes</h1>
+  <p>FPS en Unity · Christopher Payero Estrella · Matrícula 1-21-0909<br>Todos los modelos son originales, hechos con piezas básicas de Unity</p>
+</header>
+<div class="fila">
+  <section class="ficha">
+    <img src="personajes/soldado.png" alt="Sargento Halcón">
+    <div>
+      <span class="rol">Jugador</span>
+      <h2>Sargento Halcón</h2>
+      <p>Soldado del Escuadrón Halcón con casco, chaleco táctico y fusil de asalto con mira de punto rojo.</p>
+      <p class="datos"><b>3</b> vidas (máximo 5) · munición limitada</p>
+    </div>
+  </section>
+  <section class="ficha">
+    <img src="personajes/dron.png" alt="Dron explorador">
+    <div>
+      <span class="rol malo">Enemigo</span>
+      <h2>Dron explorador</h2>
+      <p>Robot volador de cuatro rotores. Vuela alto y se lanza en picada contra el jugador; explota al chocar.</p>
+      <p class="datos"><b>2</b> impactos · ojo rojo = daño doble · <b>60</b> pts</p>
+    </div>
+  </section>
+  <section class="ficha">
+    <img src="personajes/centinela.png" alt="Centinela">
+    <div>
+      <span class="rol malo">Enemigo</span>
+      <h2>Centinela</h2>
+      <p>Robot de infantería de la Legión Ferro. Camina hacia el jugador y lo golpea al alcanzarlo.</p>
+      <p class="datos"><b>4</b> impactos · cabeza = daño doble · <b>100</b> pts</p>
+    </div>
+  </section>
+  <section class="ficha">
+    <img src="personajes/coloso.png" alt="Coloso">
+    <div>
+      <span class="rol malo">Jefe final</span>
+      <h2>Coloso</h2>
+      <p>Robot gigante de 6 m. Embiste en línea recta y llama drones de refuerzo. Si choca con un pilar queda aturdido.</p>
+      <p class="datos"><b>60</b> de vida · núcleo azul = daño triple · <b>2.000</b> pts</p>
+    </div>
+  </section>
+</div>
+</body>
+</html>
